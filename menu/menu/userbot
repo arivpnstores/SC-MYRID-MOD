@@ -1,0 +1,163 @@
+#!/bin/bash
+clear
+Green="\e[92;1m"
+RED="\033[31m"
+NC='\033[0m'
+OR='\033[1;93m'
+grenbo="\e[92;1m"
+rm -rf /usr/bin/adminbot/database.db
+rm -rf /usr/bin/ridwan.session
+uuid=$(tr </dev/urandom -dc a-z | head -c15)
+clear
+    echo -e "  ${OR}──────────────────────────────────────${NC}"
+    echo -e " ${z}│$NC\033[41m    Admin Simple BOT Tele               $NC│$NC" 
+    echo -e "  ${OR}──────────────────────────────────────${NC}"
+    source '/usr/bin/adminbot/var.txt'
+    echo "           USER ID TELEGRAM"
+    echo "             1.$USER1"
+    echo "             2.$USER2"
+    echo "             3.$USER3"
+    echo "             4.$USER4"
+    echo "             5.$USER5"
+    echo "             6.$USER6"
+    echo "             7.$USER7"
+    echo "             8.$USER8"
+    echo "             9.$USER9"
+    echo "             10.$USER10"
+    botadd1() {
+        read -rp "  Input ur admin 1 : " -e admin1
+        sed -i "s/$USER1/$admin1/g" /usr/bin/adminbot/var.txt
+        sed -i "s/$SESSIONS/$uuid/g" /usr/bin/adminbot/var.txt
+        rm -rf /usr/bin/adminbot/database.db
+        systemctl daemon-reload
+        systemctl stop adminbot
+        systemctl enable adminbot
+        systemctl start adminbot
+        systemctl restart adminbot
+        echo "Successfull added admin bot"
+    }
+    botadd2() {
+        read -rp "  Input ur admin 2 : " -e admin2
+        sed -i "s/$USER2/$admin2/g" /usr/bin/adminbot/var.txt
+        sed -i "s/$SESSIONS/$uuid/g" /usr/bin/adminbot/var.txt
+        rm -rf /usr/bin/adminbot/database.db
+        systemctl daemon-reload
+        systemctl stop adminbot
+        systemctl enable adminbot
+        systemctl start adminbot
+        systemctl restart adminbot
+        echo "Successfull added admin bot"
+    }
+    botadd3() {
+        read -rp "  Input ur admin 3 : " -e admin3
+        sed -i "s/$USER3/$admin3/g" /usr/bin/adminbot/var.txt
+        sed -i "s/$SESSIONS/$uuid/g" /usr/bin/adminbot/var.txt
+        rm -rf /usr/bin/adminbot/database.db
+        systemctl daemon-reload
+        systemctl stop adminbot
+        systemctl enable adminbot
+        systemctl start adminbot
+        systemctl restart adminbot
+        echo "Successfull added admin bot"
+    }
+    botadd4() {
+        read -rp "  Input ur admin 4 : " -e admin4
+        sed -i "s/$USER4/$admin4/g" /usr/bin/adminbot/var.txt
+        sed -i "s/$SESSIONS/$uuid/g" /usr/bin/adminbot/var.txt
+        rm -rf /usr/bin/adminbot/database.db
+        systemctl daemon-reload
+        systemctl stop adminbot
+        systemctl enable adminbot
+        systemctl start adminbot
+        systemctl restart adminbot
+        echo "Successfull added admin bot"
+    }
+    botadd5() {
+        read -rp "  Input ur admin 5 : " -e admin5
+        sed -i "s/$USER5/$admin5/g" /usr/bin/adminbot/var.txt
+        sed -i "s/$SESSIONS/$uuid/g" /usr/bin/adminbot/var.txt
+        rm -rf /usr/bin/adminbot/database.db
+        systemctl daemon-reload
+        systemctl stop adminbot
+        systemctl enable adminbot
+        systemctl start adminbot
+        systemctl restart adminbot
+        echo "Successfull added admin bot"
+    }
+    botadd6() {
+        read -rp "  Input ur admin 6 : " -e admin6
+        sed -i "s/$USER6/$admin6/g" /usr/bin/adminbot/var.txt
+        sed -i "s/$SESSIONS/$uuid/g" /usr/bin/adminbot/var.txt
+        rm -rf /usr/bin/adminbot/database.db
+        systemctl daemon-reload
+        systemctl stop adminbot
+        systemctl enable adminbot
+        systemctl start adminbot
+        systemctl restart adminbot
+        echo "Successfull added admin bot"
+    }
+    botadd7() {
+        read -rp "  Input ur admin 7 : " -e admin7
+        sed -i "s/$USER7/$admin7/g" /usr/bin/adminbot/var.txt
+        sed -i "s/$SESSIONS/$uuid/g" /usr/bin/adminbot/var.txt
+        rm -rf /usr/bin/adminbot/database.db
+        systemctl daemon-reload
+        systemctl stop adminbot
+        systemctl enable adminbot
+        systemctl start adminbot
+        systemctl restart adminbot
+        echo "Successfull added admin bot"
+    }
+    botadd8() {
+        read -rp "  Input ur admin 8 : " -e admin8
+        sed -i "s/$USER8/$admin8/g" /usr/bin/adminbot/var.txt
+        sed -i "s/$SESSIONS/$uuid/g" /usr/bin/adminbot/var.txt
+        rm -rf /usr/bin/adminbot/database.db
+        systemctl daemon-reload
+        systemctl stop adminbot
+        systemctl enable adminbot
+        systemctl start adminbot
+        systemctl restart adminbot
+        echo "Successfull added admin bot"
+    }
+    botadd9() {
+        read -rp "  Input ur admin 9 : " -e admin9
+        sed -i "s/$USER9/$admin9/g" /usr/bin/adminbot/var.txt
+        sed -i "s/$SESSIONS/$uuid/g" /usr/bin/adminbot/var.txt
+        rm -rf /usr/bin/adminbot/database.db
+        systemctl daemon-reload
+        systemctl stop adminbot
+        systemctl enable adminbot
+        systemctl start adminbot
+        systemctl restart adminbot
+        echo "Successfull added admin bot"
+    }
+    botadd10() {
+        read -rp "  Input ur admin 10 : " -e admin10
+        sed -i "s/$USER10/$admin10/g" /usr/bin/adminbot/var.txt
+        sed -i "s/$SESSIONS/$uuid/g" /usr/bin/adminbot/var.txt
+        rm -rf /usr/bin/adminbot/database.db
+        systemctl daemon-reload
+        systemctl stop adminbot
+        systemctl enable adminbot
+        systemctl start adminbot
+        systemctl restart adminbot
+        echo "Successfull added admin bot"
+    }
+    read -p "  Select From Options [ 1 - 10 ] : " menubot
+    case $menubot in
+    1) botadd1 ;;
+    2) botadd2 ;;
+    3) botadd3 ;;
+    4) botadd4 ;;
+    5) botadd5 ;;
+    6) botadd6 ;;
+    7) botadd7 ;;
+    8) botadd8 ;;
+    9) botadd9 ;;
+    10) botadd10 ;;
+
+    *)
+        exit 0
+        ;;
+    esac

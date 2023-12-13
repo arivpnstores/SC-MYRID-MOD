@@ -1,0 +1,72 @@
+#!/bin/bash
+# //====================================================
+# //	System Request:Debian 9+/Ubuntu 18.04+/20+
+# //	Author:	myridwan
+# //	Dscription: Xray Menu Management
+# //	email: admin@myridwan.com
+# //  telegram: https://t.me/kytxz
+# //====================================================
+# // font color configuration | MYRIDWAN AUTOSCRIPT
+red() { echo -e "\\033[32;1m${*}\\033[0m"; }
+IP=$(curl -s ipv4.icanhazip.com)
+HOST="$(cat /etc/xray/domain)"
+DATEVPS=$(date +"%d-%B-%Y")
+ISPVPS=$(cat /etc/xray/isp)
+CITY=$(cat /etc/xray/city)
+GREEN="\e[92;1m"
+blue="\e[1;96m"
+RED='\033[0;31m'
+NC='\033[0m'
+putih="\e[1;97m"
+BGX="\e[104m"
+blue="\e[1;96m"
+NC='\e[0m'
+function BACKUPVPS() {
+    rm -rf /root/backup
+    mkdir /root/backup
+    cp /etc/passwd backup/
+    cp /etc/group backup/
+    cp /etc/shadow backup/
+    cp /etc/gshadow backup/
+    cp /etc/crontab backup/
+    cp -r /var/lib/kyt/ backup/kyt 
+    cp -r /etc/xray backup/xray
+    cp -r /var/www/html/ backup/html
+    cp -r /etc/ssh/.ssh.db backup/ssh.db
+    cp -r /etc/vmess/.vmess.db backup/vmess.db
+    cp -r /etc/vless/.vless.db backup/vless.db
+    cp -r /etc/trojan/.trojan.db backup/trojan.db
+    cp -r /etc/shadowsocks/.shadowsocks.db backup/shadowsocks.db
+    cd /root
+    zip -r $IP-$DATEVPS.zip backup > /dev/null 2>&1
+    rclone copy /root/$IP-$DATEVPS.zip dr:backup/
+    url=$(rclone link dr:backup/$IP-$DATEVPS.zip)
+    id=(`echo $url | grep '^https' | cut -d'=' -f2`)
+    link="https://drive.google.com/u/4/uc?id=${id}&export=download"
+    rm -rf backup
+    rm -rf $IP-$DATEVPSVPS.zip
+    echo -e "
+${blue}_______________________________________${NC}
+${BGX}      SUCCESSFULL BACKUP YOUR VPS      ${NC}
+${BGX}     Please Save The Following Data    ${NC}
+${blue}_______________________________________${NC}
+${putih}YOUR VPS IP : $IP${NC}
+${putih}DOMAIN      : $HOST${NC}
+${putih}DATE        : $DATEVPS${NC}
+${putih}LINK BACKUP : $link${NC}
+${blue}_______________________________________${NC}
+${GREEN}© Copyright By https://github.com/arivpnstores
+Busines email : arivpnstores@gmail.com
+Report bugs   : https://t.me/ARI-VPN-STORE${NC}"
+read -n 1 -s -r -p "Press any key to back on menu"
+menu
+}
+email=$(cat /root/email)
+if [[ "$email" = "" ]]; then
+echo "Masukkan Email Untuk Menerima Backup"
+read -rp "Email : " -e email
+cat <<EOF>>/root/email
+$email
+EOF
+fi
+BACKUPVPS

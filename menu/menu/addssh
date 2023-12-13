@@ -1,0 +1,195 @@
+#!/bin/bash
+# //====================================================
+# //	System Request:Debian 9+/Ubuntu 18.04+/20+
+# //	Author:	myridwan
+# //	Dscription: Xray Menu Management
+# //	email: admin@myridwan.com
+# //  telegram: https://t.me/kytxz
+# //====================================================
+IP=$(curl -sS ipv4.icanhazip.com)
+Green="\e[92;1m"
+RED="\033[31m"
+NC='\033[0m'
+OR='\033[1;93m'
+ipsaya=$(wget -qO- ipinfo.io/ip)
+data_server=$(curl -v ─insecure ─silent https://google.com/ 2>&1 | grep Date | sed -e 's/< Date: //')
+date_list=$(date +"%Y-%m-%d" -d "$data_server")
+data_ip="https://raw.githubusercontent.com/arivpnstores/akses/main/ip"
+CITY=$(cat /etc/xray/city)
+PUB=$(cat /etc/slowdns/server.pub)
+NS=$(cat /etc/xray/dns)
+domain=$(cat /etc/xray/domain)
+checking_sc() {
+  useexp=$(wget -qO- $data_ip | grep $ipsaya | awk '{print $3}')
+  if [[ $date_list < $useexp ]]; then
+    echo -ne
+  else
+    echo -e "${OR}────────────────────────────────────────────${NC}"
+    echo -e "\033[42m             AUTOSCRIPT                  ${NC}"
+    echo -e "${OR}────────────────────────────────────────────${NC}"
+    echo -e ""
+    echo -e "            ${RED}PERMISSION DENIED !${NC}"
+    echo -e "   \033[0;33mYour VPS${NC} $ipsaya \033[0;33mHas been Banned${NC}"
+    echo -e "     \033[0;33mBuy access permissions for scripts${NC}"
+    echo -e "             \033[0;33mContact Admin :${NC}"
+    echo -e "      \033[0;36mTelegram${NC} t.me/ARI_VPN_STORE"
+    echo -e "      ${GREEN}WhatsApp${NC} wa.me/6288976654724"
+    echo -e "${OR}────────────────────────────────────────────${NC}"
+    exit
+  fi
+}
+checking_sc
+clear
+until [[ $user =~ ^[a-zA-Z0-9_]+$ && ${CLIENT_EXISTS} == '0' ]]; do
+  clear
+  echo -e "  ${OR}──────────────────────────────────────${NC}"
+  echo -e " ${z}│$NC\033[41m     Add SSH Account               $NC│$NC" 
+  echo -e "  ${OR}──────────────────────────────────────${NC}"
+  echo ""
+  read -rp "  Input Username: " -e user
+  CLIENT_EXISTS=$(grep -w $user /etc/ssh/.ssh.db | wc -l)
+
+  if [[ ${CLIENT_EXISTS} == '1' ]]; then
+    clear
+    echo -e "  ${OR}──────────────────────────────────────${NC}"
+    echo -e " ${z}│$NC\033[41m     Add SSH Account               $NC│$NC" 
+    echo -e "  ${OR}──────────────────────────────────────${NC}"
+    echo ""
+    echo "       The customer name already exists"
+    echo ""
+    echo -e "  ${OR}───────────────────────────────────────${NC}"
+    exit
+
+  fi
+done
+
+sec=3
+spinner=(⣻ ⢿ ⡿ ⣟ ⣯ ⣷)
+while [ $sec -gt 0 ]; do
+  echo -ne "\e[33m ${spinner[sec]} Setting up a Premium Account $sec seconds...\r"
+  sleep 1
+  sec=$(($sec - 1))
+done
+clear
+echo ""
+echo -e "\e[1;32m     input dependecies account $user\e[0m\n"
+echo -e "\033[0;33m .::.  Script by ARISCTUNNEL .::.\e[0m\n"
+echo ""
+echo "    No unlimited for limit SSH"
+echo "          at least with 1 ip"
+echo ""
+echo "   Username : $user"
+until [[ $PASSWD =~ ^[a-zA-Z0-9]+$ ]]; do
+  read -p "   Password : " PASSWD
+done
+until [[ $EXPIRED =~ ^[0-9]+$ ]]; do
+  read -p "   Expired (days): " EXPIRED
+done
+#until [[ $iplim =~ ^[0-9]+$ ]]; do
+#  read -p "   Limit User (IP): " iplim
+#done
+
+#IP=$(curl -sS ifconfig.me)
+CITY=$(cat /etc/xray/city)
+PUB=$(cat /etc/slowdns/server.pub)
+NS=$(cat /etc/xray/dns)
+domain=$(cat /etc/xray/domain)
+useradd -e $(date -d "$EXPIRED days" +"%Y-%m-%d") -s /bin/false -M $user
+exp="$(chage -l $user | grep "Account expires" | awk -F": " '{print $2}')"
+dbexp=$(date -d "$EXPIRED days" +"%Y-%m-%d")
+echo -e "$PASSWD\n$PASSWD\n" | passwd $user &>/dev/null
+
+if [[ ${c} != "0" ]]; then
+  echo "${iplim}" >/etc/ssh/${user}
+fi
+DATADB=$(cat /etc/ssh/.ssh.db | grep "^###" | grep -w "${user}" | awk '{print $2}')
+if [[ "${DATADB}" != '' ]]; then
+  sed -i "/\b${user}\b/d" /etc/ssh/.ssh.db
+fi
+echo "### ${user} ${dbexp}" >>/etc/ssh/.ssh.db
+
+cat >/var/www/html/ssh-$user.txt <<END
+
+──────────────────────
+Format SSH Account
+──────────────────────
+Username         : $user
+Password         : $PASSWD
+SSH WS / HTTP    : $domain:80@$user:$PASSWD
+SSH WSS / SSL    : $domain:443@$user:$PASSWD
+──────────────────────
+IP               : $IP
+Host             : $domain
+Host Slowdns     : ${NS}
+Pub Key          : ${PUB}
+Location         : $CITY
+Port OpenSSH     : 443, 80, 22
+Port UdpSSH      : 1-65535
+SSH UDP SSH      : $domain:1-65535@$user:$PASSWD
+Port Dropbear    : 443, 109
+Port Dropbear WS : 443, 109
+Port SSH WS      : 80
+Port SSH SSL WS  : 443
+Port SSL/TLS     : 443
+Port OVPN WS SSL : 443
+Port OVPN SSL    : 443
+Port OVPN TCP    : 443, 1194
+Port OVPN UDP    : 2200
+Proxy Squid 1    : 3128
+Proxy Squid 2    : 8000
+Proxy Squid 3    : 8080
+BadVPN UDP       : 7100, 7300, 7300
+──────────────────────
+Payload WSS: GET wss://BUG.COM/ HTTP/1.1[crlf]Host: $domain[crlf]Upgrade: websocket[crlf][crlf] 
+──────────────────────
+OpenVPN Link     : http://$domain:85
+──────────────────────
+Expired          : $exp
+
+END
+
+clear
+echo -e "${OR}───────────────────────────${NC}" | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "\e[92;1m     SSH Account     \E[0m" | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "${OR}───────────────────────────${NC}" | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "Username         : $user" | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "Password         : $PASSWD" | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "SSH WS / HTTP    : $domain:80@$user:$PASSWD" | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "SSH WSS / SSL    : $domain:443@$user:$PASSWD" | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "${OR}───────────────────────────${NC}" | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "IP               : ${IP}" | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "Host             : $domain" | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "Host Slowdns     : ${NS}" | tee -a /etc/xray/log-createssh-${user}.log
+#echo -e "Location         : $CITY" | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "Port OpenSSH     : 443, 80, 22" | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "Port UdpSSH      : 1-65535" | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "Port DNS         : 443, 53 ,22 " | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "Port Dropbear    : 443, 109" | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "Port Dropbear WS : 443, 109" | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "Port SSH WS      : 80, 8080" | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "Port SSH SSL WS  : 443" | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "Port SSL/TLS     : 443" | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "Port OVPN WS SSL : 443" | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "Port OVPN SSL    : 443" | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "Port OVPN TCP    : 443, 1194" | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "Port OVPN UDP    : 2200" | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "Proxy Squid      : 3128" | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "BadVPN UDP       : 7100, 7300, 7300" | tee -a /etc/xray/log-createssh-${user}.log
+#echo -e "Pub Key SlowDns  : ${PUB}" | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "${OR}───────────────────────────${NC}" | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "Payload WSS      : GET wss://BUG.COM/ HTTP/1.1[crlf]Host: $domain[crlf]Upgrade: websocket[crlf][crlf]" | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "${OR}───────────────────────────${NC}" | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "OpenVPN Link     : https://$domain:81" | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "${OR}───────────────────────────${NC}" | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "Save Link Account: https://$domain:81/ssh-$user.txt"
+echo -e "${OR}───────────────────────────${NC}" | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "Expired          : $exp" | tee -a /etc/xray/log-createssh-${user}.log
+echo -e "" | tee -a /etc/xray/log-createssh-${user}.log
+tyblue='\e[1;36m'
+NC='\e[0m'
+echo -e  "${tyblue}┌──────────────────────────────────────────┐${NC}"
+echo -e  "${tyblue}│              \033[1;37mTERIMA KASIH                ${tyblue}│${NC}"
+echo -e  "${tyblue}│         \033[1;37mSUDAH MENGGUNAKAN SCRIPT         ${tyblue}│${NC}"
+echo -e  "${tyblue}│                \033[1;37mDARI SAYA                 ${tyblue}│${NC}"
+echo -e  "${tyblue}└──────────────────────────────────────────┘${NC}"
+echo ""
