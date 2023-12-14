@@ -1,0 +1,51 @@
+#!/bin/bash
+# ==========================================
+# Color
+GREEN="\e[92;1m"
+blue="\e[1;96m"
+RED='\033[0;31m'
+NC='\033[0m'
+putih="\e[1;97m"
+BGX="\e[104m"
+blue="\e[1;96m"
+NC='\e[0m'
+# ==========================================
+IP=$(curl -s ipv4.icanhazip.com)
+HOST="$(cat /etc/xray/domain)"
+DATEVPS=$(date +"%d-%B-%Y")
+# Getting
+clear
+echo "Silahkan Masukin Link Backupnya"
+read -rp "Link File: " -e url
+wget -O backup.zip "$url"
+unzip backup.zip
+rm -f backup.zip
+sleep 1
+echo Start Restore
+cd /root/backup
+cp passwd /etc/
+cp group /etc/
+cp shadow /etc/
+cp gshadow /etc/
+cp -r kyt /var/lib/
+cp -r xray /etc/
+cp -r html /var/www/
+cp crontab /etc/
+
+    echo -e "
+${blue}_______________________________________${NC}
+${BGX}      SUCCESSFULL RESTORE YOUR VPS     ${NC}
+${BGX}     Please Save The Following Data    ${NC}
+${blue}_______________________________________${NC}
+${putih}YOUR VPS IP : $IP${NC}
+${putih}DOMAIN      : $HOST${NC}
+${putih}DATE        : $DATEVPS${NC}
+${blue}_______________________________________${NC}
+${GREEN}© Copyright By https://github.com/kingstores
+Busines email : irawancandra6699@gmail.com
+Report bugs   : https://t.me/CandraVpnz${NC}"
+read -n 1 -s -r -p "Press any key to back on menu"
+menu
+rm -rf /root/backup
+rm -f backup.zip
+echo ""

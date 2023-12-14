@@ -1,0 +1,218 @@
+#!/bin/bash
+# //====================================================
+# //	System Request:Debian 9+/Ubuntu 18.04+/20+
+# //	Author:	bhoikfostyahya
+# //	Dscription: Xray Menu Management
+# //	email: admin@bhoikfostyahya.com
+# //  telegram: https://t.me/bhoikfost_yahya
+# //====================================================
+Green="\e[92;1m"
+RED="\033[31m"
+NC='\033[0m'
+OR='\033[1;93m'
+ipsaya=$(wget -qO- ipinfo.io/ip)
+data_server=$(curl -v --insecure --silent https://google.com/ 2>&1 | grep Date | sed -e 's/< Date: //')
+date_list=$(date +"%Y-%m-%d" -d "$data_server")
+data_ip="https://raw.githubusercontent.com/arivpnstores/akses/main/ip"
+CITY=$(cat /etc/xray/city)
+PUB=$(cat /etc/slowdns/server.pub)
+NS=$(cat /etc/xray/dns)
+domain=$(cat /etc/xray/domain)
+checking_sc() {
+  useexp=$(wget -qO- $data_ip | grep $ipsaya | awk '{print $3}')
+  if [[ $date_list < $useexp ]]; then
+    echo -ne
+  else
+    echo -e "${OR}────────────────────────────────────────────${NC}"
+    echo -e "\033[42m          MYRIDTUNNEL AUTOSCRIPT          ${NC}"
+    echo -e "${OR}────────────────────────────────────────────${NC}"
+    echo -e ""
+    echo -e "            ${RED}PERMISSION DENIED !${NC}"
+    echo -e "   \033[0;33mYour VPS${NC} $ipsaya \033[0;33mHas been Banned${NC}"
+    echo -e "     \033[0;33mBuy access permissions for scripts${NC}"
+    echo -e "             \033[0;33mContact Admin :${NC}"
+    echo -e "      \033[0;36mTelegram${NC} t.me/ARI_VPN_STORE"
+    echo -e "      ${GREEN}WhatsApp${NC} wa.me/6281327393959"
+    echo -e "${OR}────────────────────────────────────────────${NC}"
+    exit
+  fi
+}
+checking_sc
+clear
+
+echo -e "  ${OR}──────────────────────────────────────${NC}"
+printf "\e[1;92m    .::.\e[0m\e[1;77m Trial Xray/Vmess Account \e[1;92m.::.\e[0m\n"
+echo -e "  ${OR}──────────────────────────────────────${NC}"
+echo ""
+read -p "  Expired (Minutes): " timer
+user=Trial_$(tr </dev/urandom -dc X-Z0-9 | head -c4)
+uuid=$(cat /proc/sys/kernel/random/uuid)
+exp=$(date -d "1 days" +"%Y-%m-%d")
+sed -i '/#vmess$/a\### '"$user $exp"'\
+},{"id": "'""$uuid""'","alterId": '"0"',"email": "'""$user""'"' /etc/xray/config.json
+exp=$(date -d "1 days" +"%Y-%m-%d")
+sed -i '/#vmessgrpc$/a\### '"$user $exp"'\
+},{"id": "'""$uuid""'","alterId": '"0"',"email": "'""$user""'"' /etc/xray/config.json
+cat >/etc/xray/$user-tls.json <<EOF
+      {
+      "v": "2",
+      "ps": "$user WS (CDN) TLS",
+      "add": "${domain}",
+      "port": "443",
+      "id": "${uuid}",
+      "aid": "0",
+      "net": "ws",
+      "path": "/whatever/vmess",
+      "type": "none",
+      "host": "${domain}",
+      "tls": "tls"
+}
+EOF
+cat >/etc/xray/$user-non.json <<EOF
+      {
+      "v": "2",
+      "ps": "$user WS (CDN) NTLS",
+      "add": "${domain}",
+      "port": "80",
+      "id": "${uuid}",
+      "aid": "0",
+      "net": "ws",
+      "path": "/whatever/vmess",
+      "type": "none",
+      "host": "${domain}",
+      "tls": "none"
+}
+EOF
+cat >/etc/xray/$user-grpc.json <<EOF
+      {
+      "v": "2",
+      "ps": "$user (SNI) GRPC",
+      "add": "${domain}",
+      "port": "443",
+      "id": "${uuid}",
+      "aid": "0",
+      "net": "grpc",
+      "path": "vmess-grpc",
+      "type": "none",
+      "host": "${domain}",
+      "tls": "tls"
+}
+EOF
+cat >/var/www/html/vmess-$user.txt <<-END
+
+---------------------
+# Format Vmess WS (CDN)
+---------------------
+
+- name: Vmess-$user-WS (CDN)
+  type: vmess
+  server: ${domain}
+  port: 443
+  uuid: ${uuid}
+  alterId: 0
+  cipher: auto
+  udp: true
+  tls: true
+  skip-cert-verify: true
+  servername: ${domain}
+  network: ws
+  ws-opts:
+    path: /whatever/vmess
+    headers:
+      Host: ${domain}
+---------------------
+# Format Vmess WS (CDN) Non TLS
+---------------------
+
+- name: Vmess-$user-WS (CDN) Non TLS
+  type: vmess
+  server: ${domain}
+  port: 80
+  uuid: ${uuid}
+  alterId: 0
+  cipher: auto
+  udp: true
+  tls: false
+  skip-cert-verify: false
+  servername: ${domain}
+  network: ws
+  ws-opts:
+    path: /whatever/vmess
+    headers:
+      Host: ${domain}
+---------------------
+# Format Vmess gRPC (SNI)
+---------------------
+
+- name: Vmess-$user-gRPC (SNI)
+  server: ${domain}
+  port: 443
+  type: vmess
+  uuid: ${uuid}
+  alterId: 0
+  cipher: auto
+  network: grpc
+  tls: true
+  servername: ${domain}
+  skip-cert-verify: true
+  grpc-opts:
+    grpc-service-name: vmess-grpc
+
+---------------------
+# Link Vmess Account
+---------------------
+Link TLS : vmess://$(base64 -w 0 /etc/xray/$user-tls.json)
+---------------------
+Link none TLS : vmess://$(base64 -w 0 /etc/xray/$user-non.json)
+---------------------
+Link GRPC : vmess://$(base64 -w 0 /etc/xray/$user-grpc.json)
+---------------------
+
+END
+#vmesslink1="vmess://$(echo $VMESS_WS | base64 -w 0)"
+vmesslink1="vmess://$(base64 -w 0 /etc/xray/$user-tls.json)"
+#vmesslink2="vmess://$(echo $VMESS_NON_TLS | base64 -w 0)"
+vmesslink2="vmess://$(base64 -w 0 /etc/xray/$user-non.json)"
+#vmesslink3="vmess://$(echo $VMESS_GRPC | base64 -w 0)"
+vmesslink3="vmess://$(base64 -w 0 /etc/xray/$user-grpc.json)"
+systemctl restart xray
+tmux new-session -d -s $user "trial trialws $user $timer"
+clear -x
+echo -e "${OR}───────────────────────────${NC}"
+echo -e "\e[92;1m    Xray/Vmess Account    \E[0m"
+echo -e "${OR}───────────────────────────${NC}"
+echo -e "Remarks      : ${user}"
+echo -e "Host Server  : ${domain}"
+#echo -e "Host XrayDNS : ${NS}"
+#echo -e "Location     : $CITY"
+echo -e "port TLS     : 443"
+echo -e "Port NTLS    : 80, 8080"
+echo -e "Port DNS     : 443, 53"
+echo -e "Port GRPC    : 443"
+echo -e "AlterId      : 0"
+echo -e "Security     : auto"
+echo -e "Network      : WS or gRPC"
+echo -e "Path         : /whatever/vmess "
+echo -e "ServiceName  : vmess-grpc"
+echo -e "User ID      : ${uuid}"
+#echo -e "Pub Key      : ${PUB}"
+echo -e "${OR}───────────────────────────${NC}"
+echo -e "Link TLS  : ${vmesslink1}"
+echo -e "${OR}───────────────────────────${NC}"
+echo -e "Link NTLS : ${vmesslink2}"
+echo -e "${OR}───────────────────────────${NC}"
+echo -e "Link GRPC : ${vmesslink3}"
+echo -e "${OR}───────────────────────────${NC}"
+echo -e "Format OpenClash : https://${domain}:81/vmess-$user.txt"
+echo -e "${OR}───────────────────────────${NC}"
+echo -e "Expired On : $timer Minutes"
+echo -e ""
+tyblue='\e[1;36m'
+NC='\e[0m'
+echo -e  "${tyblue}┌──────────────────────────────────────────┐${NC}"
+echo -e  "${tyblue}│              \033[1;37mTERIMA KASIH                ${tyblue}│${NC}"
+echo -e  "${tyblue}│         \033[1;37mSUDAH MENGGUNAKAN SCRIPT         ${tyblue}│${NC}"
+echo -e  "${tyblue}│                \033[1;37mDARI SAYA                 ${tyblue}│${NC}"
+echo -e  "${tyblue}└──────────────────────────────────────────┘${NC}"
+echo ""
+exit 0

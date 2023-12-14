@@ -1,0 +1,201 @@
+#!/bin/bash
+# //====================================================
+# //	System Request:Debian 9+/Ubuntu 18.04+/20+
+# //	Author:	myridwan
+# //	Dscription: Xray Menu Management
+# //	email: admin@myridwan.com
+# //  telegram: https://t.me/kytxz
+# //====================================================
+Green="\e[92;1m"
+RED="\033[31m"
+NC='\033[0m'
+OR='\033[1;93m'
+ipsaya=$(wget -qO- ipinfo.io/ip)
+data_server=$(curl -v --insecure --silent https://google.com/ 2>&1 | grep Date | sed -e 's/< Date: //')
+date_list=$(date +"%Y-%m-%d" -d "$data_server")
+data_ip="https://raw.githubusercontent.com/arivpnstores/akses/main/ip"
+CITY=$(cat /etc/xray/city)
+PUB=$(cat /etc/slowdns/server.pub)
+NS=$(cat /etc/xray/dns)
+domain=$(cat /etc/xray/domain)
+checking_sc() {
+  useexp=$(wget -qO- $data_ip | grep $ipsaya | awk '{print $3}')
+  if [[ $date_list < $useexp ]]; then
+    echo -ne
+  else
+    echo -e "${OR}────────────────────────────────────────────${NC}"
+    echo -e "\033[42m             AUTOSCRIPT          ${NC}"
+    echo -e "${OR}────────────────────────────────────────────${NC}"
+    echo -e ""
+    echo -e "            ${RED}PERMISSION DENIED !${NC}"
+    echo -e "   \033[0;33mYour VPS${NC} $ipsaya \033[0;33mHas been Banned${NC}"
+    echo -e "     \033[0;33mBuy access permissions for scripts${NC}"
+    echo -e "             \033[0;33mContact Admin :${NC}"
+    echo -e "      \033[0;36mTelegram${NC} t.me/ARI_VPN_STORE"
+    echo -e "      ${GREEN}WhatsApp${NC} wa.me/6281327393959"
+    echo -e "${OR}────────────────────────────────────────────${NC}"
+    exit
+  fi
+}
+checking_sc
+clear
+until [[ $user =~ ^[a-zA-Z0-9_]+$ && ${CLIENT_EXISTS} == '0' ]]; do
+  clear
+  echo -e "  ${OR}──────────────────────────────────────${NC}"
+  printf "\e[1;92m    .::.\e[0m\e[1;77m Add Xray/Trojan Account \e[1;92m.::.\e[0m\n"
+  echo -e "  ${OR}──────────────────────────────────────${NC}"
+  echo ""
+  read -rp "  Input Username: " -e user
+  CLIENT_EXISTS=$(grep -w $user /etc/xray/config.json | wc -l)
+
+  if [[ ${CLIENT_EXISTS} == '1' ]]; then
+    clear
+    echo -e "  ${OR}──────────────────────────────────────${NC}"
+    printf "\e[1;92m    .::.\e[0m\e[1;77m Add Xray/Trojan Account \e[1;92m.::.\e[0m\n"
+    echo -e "  ${OR}──────────────────────────────────────${NC}"
+    echo ""
+    echo "       The customer name already exists"
+    echo ""
+    echo -e "  ${OR}───────────────────────────────────────${NC}"
+    exit
+
+  fi
+done
+
+uuid=$(cat /proc/sys/kernel/random/uuid)
+sec=3
+echo ""
+spinner=(⣻ ⢿ ⡿ ⣟ ⣯ ⣷)
+while [ $sec -gt 0 ]; do
+  echo -ne "\e[33m ${spinner[sec]} Setting up a Premium Account $sec seconds...\r"
+  sleep 1
+  sec=$(($sec - 1))
+done
+clear
+echo ""
+echo -e "\e[1;32m   input dependecies account $user\e[0m\n"
+echo -e "\033[0;33m .::.  Script by Tunnel  .::.\e[0m\n"
+echo ""
+echo "   Setup Limit Quota/ip for Account"
+echo "       0 For Unlimited/No Limit"
+echo ""
+echo "   Username : $user"
+until [[ $masaaktif =~ ^[0-9]+$ ]]; do
+  read -p "   Expired (days): " masaaktif
+done
+until [[ $Quota =~ ^[0-9]+$ ]]; do
+  read -p "   Limit User (GB): " Quota
+done
+#until [[ $iplim =~ ^[0-9]+$ ]]; do
+#  read -p    Limit User (IP): " iplim
+#done
+exp=$(date -d "$masaaktif days" +"%Y-%m-%d")
+sed -i '/#trojanws$/a\#! '"$user $exp"'\
+},{"password": "'""$uuid""'","email": "'""$user""'"' /etc/xray/config.json
+sed -i '/#trojangrpc$/a\#! '"$user $exp"'\
+},{"password": "'""$uuid""'","email": "'""$user""'"' /etc/xray/config.json
+
+trojanlink1="trojan://${uuid}@${domain}:443?mode=gun&security=tls&type=grpc&serviceName=trojan-grpc&sni=bug.com#${user}"
+trojanlink="trojan://${uuid}@bugkamu.com:443?path=%2Ftrojan-ws&security=tls&host=${domain}&type=ws&sni=${domain}#${user}"
+cat >/var/www/html/trojan-$user.txt <<-END
+
+---------------------
+# Format Trojan GO/WS (CDN)
+---------------------
+
+- name: Trojan-$user-GO/WS (CDN)
+  server: ${domain}
+  port: 443
+  type: trojan
+  password: ${uuid}
+  network: ws
+  sni: ${domain}
+  skip-cert-verify: true
+  udp: true
+  ws-opts:
+    path: /trojan-ws
+    headers:
+        Host: ${domain}
+---------------------
+# Format Trojan gRPC
+---------------------
+
+- name: Trojan-$user-gRPC (SNI)
+  type: trojan
+  server: ${domain}
+  port: 443
+  password: ${uuid}
+  udp: true
+  sni: ${domain}
+  skip-cert-verify: true
+  network: grpc
+  grpc-opts:
+    grpc-service-name: trojan-grpc
+
+---------------------
+ Link Trojan Account
+---------------------
+<code>Link WS          : </code>
+<code>${trojanlink}</code>
+---------------------
+<code>Link GRPC        : </code>
+<code>${trojanlink1}</code>
+---------------------
+
+END
+systemctl restart xray
+trojanlink="trojan://${uuid}@${domain}:443?path=%2Ftrojan-ws&security=tls&host=${domain}&type=ws&sni=${domain}#${user}"
+trojanlink1="trojan://${uuid}@${domain}:443?mode=gun&security=tls&type=grpc&serviceName=trojan-grpc&sni=${domain}#${user}"
+if [ ! -e /etc/trojan ]; then
+  mkdir -p /etc/trojan
+fi
+
+if [ -z ${Quota} ]; then
+  Quota="0"
+fi
+#if [ -z ${iplim} ]; then
+#  iplim="0"
+#fi
+c=$(echo "${Quota}" | sed 's/[^0-9]*//g')
+d=$((${c} * 1024 * 1024 * 1024))
+
+if [[ ${c} != "0" ]]; then
+  echo "${d}" >/etc/trojan/${user}
+#  echo "${iplim}" >/etc/trojan/${user}IP
+fi
+DATADB=$(cat /etc/trojan/.trojan.db | grep "^###" | grep -w "${user}" | awk '{print $2}')
+if [[ "${DATADB}" != '' ]]; then
+  sed -i "/\b${user}\b/d" /etc/trojan/.trojan.db
+fi
+echo "### ${user} ${exp} ${uuid}" >>/etc/trojan/.trojan.db
+clear -x
+echo -e "${OR}───────────────────────────${NC}" | tee -a /etc/xray/log-create-${user}.log
+echo -e "\e[92;1m    Xray/Trojan Account    \E[0m" | tee -a /etc/xray/log-create-${user}.log
+echo -e "${OR}───────────────────────────${NC}" | tee -a /etc/xray/log-create-${user}.log
+echo -e "Remarks     : ${user}" | tee -a /etc/xray/log-create-${user}.log
+echo -e "Host Server : ${domain}" | tee -a /etc/xray/log-create-${user}.log
+echo -e "Host XrayDNS: ${NS}" | tee -a /etc/xray/log-create-${user}.log
+#echo -e "Location    : $CITY" | tee -a /etc/xray/log-create-${user}.log
+echo -e "Port DNS    : 443, 53" | tee -a /etc/xray/log-create-${user}.log
+echo -e "port TLS    : 443" | tee -a /etc/xray/log-create-${user}.log
+echo -e "ServiceName : trojan-grpc" | tee -a /etc/xray/log-create-${user}.log
+echo -e "Path        : /whatever/trojan-ws" | tee -a /etc/xray/log-create-${user}.log
+#echo -e "Pub Key     : ${PUB}" | tee -a /etc/xray/log-create-${user}.log
+echo -e "${OR}───────────────────────────${NC}" | tee -a /etc/xray/log-create-${user}.log
+echo -e "Link WS    : ${trojanlink}" | tee -a /etc/xray/log-create-${user}.log
+echo -e "${OR}───────────────────────────${NC}" | tee -a /etc/xray/log-create-${user}.log
+echo -e "Link GRPC  : ${trojanlink1}" | tee -a /etc/xray/log-create-${user}.log
+echo -e "${OR}───────────────────────────${NC}" | tee -a /etc/xray/log-create-${user}.log
+echo -e "Format OpenClash : https://${domain}:81/trojan-$user.txt" | tee -a /etc/xray/log-create-${user}.log
+echo -e "${OR}───────────────────────────${NC}" | tee -a /etc/xray/log-create-${user}.log
+echo -e "Expired On : $exp" | tee -a /etc/xray/log-create-${user}.log
+echo -e "" | tee -a /etc/xray/log-create-${user}.log
+tyblue='\e[1;36m'
+NC='\e[0m'
+echo -e  "${tyblue}┌──────────────────────────────────────────┐${NC}"
+echo -e  "${tyblue}│              \033[1;37mTERIMA KASIH                ${tyblue}│${NC}"
+echo -e  "${tyblue}│         \033[1;37mSUDAH MENGGUNAKAN SCRIPT         ${tyblue}│${NC}"
+echo -e  "${tyblue}│                \033[1;37mDARI SAYA                 ${tyblue}│${NC}"
+echo -e  "${tyblue}└──────────────────────────────────────────┘${NC}"
+echo ""
+exit 0

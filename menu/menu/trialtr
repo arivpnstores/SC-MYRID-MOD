@@ -1,0 +1,133 @@
+#!/bin/bash
+# //====================================================
+# //	System Request:Debian 9+/Ubuntu 18.04+/20+
+# //	Author:	bhoikfostyahya
+# //	Dscription: Xray Menu Management
+# //	email: admin@bhoikfostyahya.com
+# //  telegram: https://t.me/bhoikfost_yahya
+# //====================================================
+Green="\e[92;1m"
+RED="\033[31m"
+NC='\033[0m'
+OR='\033[1;93m'
+ipsaya=$(wget -qO- ipinfo.io/ip)
+data_server=$(curl -v --insecure --silent https://google.com/ 2>&1 | grep Date | sed -e 's/< Date: //')
+date_list=$(date +"%Y-%m-%d" -d "$data_server")
+data_ip="https://raw.githubusercontent.com/arivpnstores/akses/main/ip"
+CITY=$(cat /etc/xray/city)
+PUB=$(cat /etc/slowdns/server.pub)
+NS=$(cat /etc/xray/dns)
+domain=$(cat /etc/xray/domain)
+checking_sc() {
+  useexp=$(wget -qO- $data_ip | grep $ipsaya | awk '{print $3}')
+  if [[ $date_list < $useexp ]]; then
+    echo -ne
+  else
+    echo -e "${OR}────────────────────────────────────────────${NC}"
+    echo -e "\033[42m          TUNNEL AUTOSCRIPT          ${NC}"
+    echo -e "${OR}────────────────────────────────────────────${NC}"
+    echo -e ""
+    echo -e "            ${RED}PERMISSION DENIED !${NC}"
+    echo -e "   \033[0;33mYour VPS${NC} $ipsaya \033[0;33mHas been Banned${NC}"
+    echo -e "     \033[0;33mBuy access permissions for scripts${NC}"
+    echo -e "             \033[0;33mContact Admin :${NC}"
+    echo -e "      \033[0;36mTelegram${NC} t.me/ARI_VPN_STORE"
+    echo -e "      ${GREEN}WhatsApp${NC} wa.me/6281327393959"
+    echo -e "${OR}────────────────────────────────────────────${NC}"
+    exit
+  fi
+}
+checking_sc
+clear
+echo -e "  ${OR}──────────────────────────────────────${NC}"
+printf "\e[1;92m    .::.\e[0m\e[1;77m Trial Xray/Trojan Account \e[1;92m.::.\e[0m\n"
+echo -e "  ${OR}──────────────────────────────────────${NC}"
+echo ""
+read -p "  Expired (Minutes): " timer
+user=Trial_$(tr </dev/urandom -dc X-Z0-9 | head -c4)
+uuid=$(cat /proc/sys/kernel/random/uuid)
+exp=$(date -d "1 days" +"%Y-%m-%d")
+sed -i '/#trojanws$/a\#! '"$user $exp"'\
+},{"password": "'""$uuid""'","email": "'""$user""'"' /etc/xray/config.json
+sed -i '/#trojangrpc$/a\#! '"$user $exp"'\
+},{"password": "'""$uuid""'","email": "'""$user""'"' /etc/xray/config.json
+cat >/var/www/html/trojan-$user.txt <<-END
+
+---------------------
+# Format Trojan GO/WS (CDN)
+---------------------
+
+- name: Trojan-$user-GO/WS (CDN)
+  server: ${domain}
+  port: 443
+  type: trojan
+  password: ${uuid}
+  network: ws
+  sni: ${domain}
+  skip-cert-verify: true
+  udp: true
+  ws-opts:
+    path: /trojan-ws
+    headers:
+        Host: ${domain}
+---------------------
+# Format Trojan gRPC
+---------------------
+
+- name: Trojan-$user-gRPC (SNI)
+  type: trojan
+  server: ${domain}
+  port: 443
+  password: ${uuid}
+  udp: true
+  sni: ${domain}
+  skip-cert-verify: true
+  network: grpc
+  grpc-opts:
+    grpc-service-name: trojan-grpc
+
+---------------------
+ Link Trojan Account
+---------------------
+Link WS : trojan://${uuid}@${domain}:443?path=trojan-ws&security=tls&host=${domain}&type=ws&sni=${domain}#Trojan-$user-GO%2BWS
+---------------------
+Link GRPC : trojan://${uuid}@${domain}:443?mode=gun&security=tls&type=grpc&serviceName=trojan-grpc&sni=${domain}#Trojan-$user-GRPC
+---------------------
+
+END
+systemctl restart xray
+trojanlink="trojan://${uuid}@${domain}:443?path=trojan-ws&security=tls&host=${domain}&type=ws&sni=${domain}#Trojan-$user-GO%2BWS"
+trojanlink1="trojan://${uuid}@${domain}:443?mode=gun&security=tls&type=grpc&serviceName=trojan-grpc&sni=${domain}#Trojan-$user-GRPC"
+systemctl restart xray
+tmux new-session -d -s $user "trial trialtr $user $timer"
+clear -x
+echo -e "${OR}───────────────────────────${NC}"
+echo -e "\e[92;1m    Xray/Trojan Account    \E[0m"
+echo -e "${OR}───────────────────────────${NC}"
+echo -e "Remarks     : ${user}"
+echo -e "Host Server : ${domain}"
+#echo -e "Host XrayDNS: ${NS}"
+#echo -e "Location    : $CITY"
+echo -e "Port DNS    : 443, 53"
+echo -e "port TLS    : 443"
+echo -e "ServiceName : trojan-grpc"
+echo -e "Path        : /whatever/trojan-ws"
+#echo -e "Pub Key     : ${PUB}"
+echo -e "${OR}───────────────────────────${NC}"
+echo -e "Link WS    : ${trojanlink}"
+echo -e "${OR}───────────────────────────${NC}"
+echo -e "Link GRPC  : ${trojanlink1}"
+echo -e "${OR}───────────────────────────${NC}"
+echo -e "Format OpenClash : https://${domain}:81/trojan-$user.txt"
+echo -e "${OR}───────────────────────────${NC}"
+echo -e "Expired On : $timer Minutes"
+echo -e ""
+tyblue='\e[1;36m'
+NC='\e[0m'
+echo -e  "${tyblue}┌──────────────────────────────────────────┐${NC}"
+echo -e  "${tyblue}│              \033[1;37mTERIMA KASIH                ${tyblue}│${NC}"
+echo -e  "${tyblue}│         \033[1;37mSUDAH MENGGUNAKAN SCRIPT         ${tyblue}│${NC}"
+echo -e  "${tyblue}│                \033[1;37mDARI SAYA                 ${tyblue}│${NC}"
+echo -e  "${tyblue}└──────────────────────────────────────────┘${NC}"
+echo ""
+exit 0
