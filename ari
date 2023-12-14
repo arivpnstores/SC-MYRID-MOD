@@ -7,7 +7,7 @@ BLUE="\033[36m"
 FONT="\033[0m"
 GREENBG="\033[42;37m"
 REDBG="\033[41;37m"
-OK="${Green}─->${FONT}"
+OK="${Green}--->${FONT}"
 ERROR="${RED}[ERROR]${FONT}"
 GRAY="\e[1;30m"
 NC='\e[0m'
@@ -59,7 +59,7 @@ echo ""
 sleep 3
 ## IZIN SC DAN TRIAL SC
 ipsaya=$(wget -qO- ipinfo.io/ip)
-data_server=$(curl -v ─insecure ─silent https://google.com/ 2>&1 | grep Date | sed -e 's/< Date: //')
+data_server=$(curl -v --insecure --silent https://google.com/ 2>&1 | grep Date | sed -e 's/< Date: //')
 date_list=$(date +"%Y-%m-%d" -d "$data_server")
 data_ip="https://raw.githubusercontent.com/arivpnstores/akses/main/ip"
 function CEKIPX() {
@@ -72,20 +72,20 @@ else
 fi
 }
 
-#echo -e  "${REDBG}┌──────────────────────────────────────────┐${NC}"
-#echo -e  "${REDBG}│              INPUT YOUR NAME             │${NC}"
-#echo -e  "${REDBG}└──────────────────────────────────────────┘${NC}"
-#echo " "
-#until [[ $name =~ ^[a-zA-Z0-9_.-]+$ ]]; do
-#read -rp "Masukan Nama Kamu Disini tanpa spasi : " -e name
-#done
-#rm -rf /etc/profil
-#echo "$name" > /etc/profil
-#echo ""
-#clear
-#author=$(cat /etc/profil)
-#echo ""
-#echo ""
+echo -e  "${REDBG}┌──────────────────────────────────────────┐${NC}"
+echo -e  "${REDBG}│              INPUT YOUR NAME             │${NC}"
+echo -e  "${REDBG}└──────────────────────────────────────────┘${NC}"
+echo " "
+until [[ $name =~ ^[a-zA-Z0-9_.-]+$ ]]; do
+read -rp "Masukan Nama Kamu Disini tanpa spasi : " -e name
+done
+rm -rf /etc/profil
+echo "$name" > /etc/profil
+echo ""
+clear
+author=$(cat /etc/profil)
+echo ""
+echo ""
 
 function key2(){
 clear
@@ -134,8 +134,8 @@ echo "### $author $hhari $MYIP $web2" >> ip
 fi
 sleep 0.5
 rm -rf .git
-git config ─global user.email "${EMAILGIT}" >/dev/null 2>&1
-git config ─global user.name "${USERGIT}" >/dev/null 2>&1
+git config --global user.email "${EMAILGIT}" >/dev/null 2>&1
+git config --global user.name "${USERGIT}" >/dev/null 2>&1
 git init >/dev/null 2>&1
 git add ip
 git commit -m register >/dev/null 2>&1
@@ -168,8 +168,8 @@ echo "### $author $hhari $MYIP $LIST" >> ip
 fi
 sleep 0.5
 rm -rf .git
-git config ─global user.email "${EMAILGIT}" >/dev/null 2>&1
-git config ─global user.name "${USERGIT}" >/dev/null 2>&1
+git config --global user.email "${EMAILGIT}" >/dev/null 2>&1
+git config --global user.name "${USERGIT}" >/dev/null 2>&1
 git init >/dev/null 2>&1
 git add ip
 git commit -m register >/dev/null 2>&1
@@ -186,8 +186,8 @@ sed -i "/^### $LIST $Key $KEY2/d" /root/irawancandra6699/key
 fi
 sleep 0.5
 rm -rf .git
-git config ─global user.email "rawancandra6699@gmail.com" >/dev/null 2>&1
-git config ─global user.name "irawancandra6699" >/dev/null 2>&1
+git config --global user.email "rawancandra6699@gmail.com" >/dev/null 2>&1
+git config --global user.name "irawancandra6699" >/dev/null 2>&1
 git init >/dev/null 2>&1
 git add key
 git commit -m register >/dev/null 2>&1
@@ -376,13 +376,13 @@ function first_setup(){
     if [[ $(cat /etc/os-release | grep -w ID | head -n1 | sed 's/=//g' | sed 's/"//g' | sed 's/ID//g') == "ubuntu" ]]; then
     echo "Setup Dependencies $(cat /etc/os-release | grep -w PRETTY_NAME | head -n1 | sed 's/=//g' | sed 's/"//g' | sed 's/PRETTY_NAME//g')"
     sudo apt update -y
-    apt-get install ─no-install-recommends software-properties-common
+    apt-get install --no-install-recommends software-properties-common
     add-apt-repository ppa:vbernat/haproxy-2.0 -y
     apt-get -y install haproxy=2.0.\*
 elif [[ $(cat /etc/os-release | grep -w ID | head -n1 | sed 's/=//g' | sed 's/"//g' | sed 's/ID//g') == "debian" ]]; then
     echo "Setup Dependencies For OS Is $(cat /etc/os-release | grep -w PRETTY_NAME | head -n1 | sed 's/=//g' | sed 's/"//g' | sed 's/PRETTY_NAME//g')"
     curl https://haproxy.debian.net/bernat.debian.org.gpg |
-        gpg ─dearmor >/usr/share/keyrings/haproxy.debian.net.gpg
+        gpg --dearmor >/usr/share/keyrings/haproxy.debian.net.gpg
     echo deb "[signed-by=/usr/share/keyrings/haproxy.debian.net.gpg]" \
         http://haproxy.debian.net buster-backports-1.8 main \
         >/etc/apt/sources.list.d/haproxy.list
@@ -433,9 +433,9 @@ function base_package() {
     sudo apt-get clean all
     sudo apt-get autoremove -y
     sudo apt-get install -y debconf-utils
-    sudo apt-get remove ─purge exim4 -y
-    sudo apt-get remove ─purge ufw firewalld -y
-    sudo apt-get install -y ─no-install-recommends software-properties-common
+    sudo apt-get remove --purge exim4 -y
+    sudo apt-get remove --purge ufw firewalld -y
+    sudo apt-get install -y --no-install-recommends software-properties-common
     echo iptables-persistent iptables-persistent/autosave_v4 boolean true | debconf-set-selections
     echo iptables-persistent iptables-persistent/autosave_v6 boolean true | debconf-set-selections
     sudo apt-get install -y speedtest-cli vnstat libnss3-dev libnspr4-dev pkg-config libpam0g-dev libcap-ng-dev libcap-ng-utils libselinux1-dev libcurl4-nss-dev flex bison make libnss3-tools libevent-dev bc rsyslog dos2unix zlib1g-dev libssl-dev libsqlite3-dev sed dirmngr libxml-parser-perl build-essential gcc g++ python htop lsof tar wget curl ruby zip unzip p7zip-full python3-pip libc6 util-linux build-essential msmtp-mta ca-certificates bsd-mailx iptables iptables-persistent netfilter-persistent net-tools openssl ca-certificates gnupg gnupg2 ca-certificates lsb-release gcc shc make cmake git screen socat xz-utils apt-transport-https gnupg1 dnsutils cron bash-completion ntpdate chrony jq openvpn easy-rsa
@@ -622,7 +622,7 @@ echo -e "${tyblue}┌───────────────────�
 echo -e "${tyblue}│ \033[1;37mPlease select a your Choice to Set Domain${tyblue}│${NC}"
 echo -e "${tyblue}└──────────────────────────────────────────┘${NC}"
 echo -e "${tyblue}┌──────────────────────────────────────────┐${NC}"
-echo -e "${tyblue}│  [ 1 ]  \033[1;37mGunakan Domain Sendiri/Domainmu       ${NC}"
+echo -e "${tyblue}│  [ 1 ]  \033[1;37mGunakan Domain Sendiri/Domainmu       ${NC}"                                 
 echo -e "${tyblue}└──────────────────────────────────────────┘${NC}"
 read -p "   Please select numbers 1-3 or Any Button(Random) : " host
 echo ""
@@ -677,10 +677,10 @@ print_install "Memasang SSL Pada Domain"
     systemctl stop nginx
     curl https://acme-install.netlify.app/acme.sh -o /root/.acme.sh/acme.sh
     chmod +x /root/.acme.sh/acme.sh
-    /root/.acme.sh/acme.sh ─upgrade ─auto-upgrade
-    /root/.acme.sh/acme.sh ─set-default-ca ─server letsencrypt
-    /root/.acme.sh/acme.sh ─issue -d $domain ─standalone -k ec-256
-    ~/.acme.sh/acme.sh ─installcert -d $domain ─fullchainpath /etc/xray/xray.crt ─keypath /etc/xray/xray.key ─ecc
+    /root/.acme.sh/acme.sh --upgrade --auto-upgrade
+    /root/.acme.sh/acme.sh --set-default-ca --server letsencrypt
+    /root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256
+    ~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/xray/xray.crt --keypath /etc/xray/xray.key --ecc
     chmod 777 /etc/xray/xray.key
     print_success "SSL Certificate"
 
@@ -724,7 +724,7 @@ function password_default() {
     ◇━━━━━━━━━━━━━━━━━━━━━━━◇
 "
 
-   curl -s ─max-time $TIME -d "chat_id=$CHATID&disable_web_page_preview=1&text=$TEXT&parse_mode=html" $URL >/dev/null
+   curl -s --max-time $TIME -d "chat_id=$CHATID&disable_web_page_preview=1&text=$TEXT&parse_mode=html" $URL >/dev/null
 }
 
 clear
@@ -781,7 +781,7 @@ clear
     
     # / / Ambil Xray Core Version Terbaru
 latest_version="$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | grep tag_name | sed -E 's/.*"v(.*)".*/\1/' | head -n 1)"
-bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u www-data ─version $latest_version
+bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u www-data --version $latest_version
  
     # // Ambil Config Server
     fun_bar 'res3'
@@ -991,7 +991,7 @@ apt -y install libsqlite3-dev > /dev/null 2>&1
 wget https://humdi.net/vnstat/vnstat-2.6.tar.gz
 tar zxvf vnstat-2.6.tar.gz
 cd vnstat-2.6
-./configure ─prefix=/usr ─sysconfdir=/etc && make && make install
+./configure --prefix=/usr --sysconfdir=/etc && make && make install
 cd
 vnstat -u -i $NET
 sed -i 's/Interface "'""eth0""'"/Interface "'""$NET""'"/g' /etc/vnstat.conf
@@ -1078,7 +1078,7 @@ function ins_Fail2ban(){
 clear
 print_install "Menginstall Fail2ban"
 apt -y install fail2ban > /dev/null 2>&1
-#sudo systemctl enable ─now fail2ban
+#sudo systemctl enable --now fail2ban
 /etc/init.d/fail2ban restart
 /etc/init.d/fail2ban status
 
@@ -1108,17 +1108,17 @@ wget -q -O /usr/local/share/xray/geosite.dat "https://github.com/Loyalsoldier/v2
 wget -q -O /usr/local/share/xray/geoip.dat "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat" >/dev/null 2>&1
 wget -O /usr/sbin/ftvpn "https://raw.githubusercontent.com/arivpnstores/SC-MYRID-MOD/main/ws/ftvpn" >/dev/null 2>&1
 chmod +x /usr/sbin/ftvpn
-iptables -A FORWARD -m string ─string "get_peers" ─algo bm -j DROP
-iptables -A FORWARD -m string ─string "announce_peer" ─algo bm -j DROP
-iptables -A FORWARD -m string ─string "find_node" ─algo bm -j DROP
-iptables -A FORWARD -m string ─algo bm ─string "BitTorrent" -j DROP
-iptables -A FORWARD -m string ─algo bm ─string "BitTorrent protocol" -j DROP
-iptables -A FORWARD -m string ─algo bm ─string "peer_id=" -j DROP
-iptables -A FORWARD -m string ─algo bm ─string ".torrent" -j DROP
-iptables -A FORWARD -m string ─algo bm ─string "announce.php?passkey=" -j DROP
-iptables -A FORWARD -m string ─algo bm ─string "torrent" -j DROP
-iptables -A FORWARD -m string ─algo bm ─string "announce" -j DROP
-iptables -A FORWARD -m string ─algo bm ─string "info_hash" -j DROP
+iptables -A FORWARD -m string --string "get_peers" --algo bm -j DROP
+iptables -A FORWARD -m string --string "announce_peer" --algo bm -j DROP
+iptables -A FORWARD -m string --string "find_node" --algo bm -j DROP
+iptables -A FORWARD -m string --algo bm --string "BitTorrent" -j DROP
+iptables -A FORWARD -m string --algo bm --string "BitTorrent protocol" -j DROP
+iptables -A FORWARD -m string --algo bm --string "peer_id=" -j DROP
+iptables -A FORWARD -m string --algo bm --string ".torrent" -j DROP
+iptables -A FORWARD -m string --algo bm --string "announce.php?passkey=" -j DROP
+iptables -A FORWARD -m string --algo bm --string "torrent" -j DROP
+iptables -A FORWARD -m string --algo bm --string "announce" -j DROP
+iptables -A FORWARD -m string --algo bm --string "info_hash" -j DROP
 iptables-save > /etc/iptables.up.rules
 iptables-restore -t < /etc/iptables.up.rules
 netfilter-persistent save
@@ -1144,16 +1144,16 @@ systemctl restart haproxy
 /etc/init.d/cron restart
     systemctl daemon-reload
     systemctl start netfilter-persistent
-    systemctl enable ─now nginx
-    systemctl enable ─now xray
-    systemctl enable ─now rc-local
-    systemctl enable ─now dropbear
-    systemctl enable ─now openvpn
-    systemctl enable ─now cron
-    systemctl enable ─now haproxy
-    systemctl enable ─now netfilter-persistent
-    systemctl enable ─now ws
-    systemctl enable ─now fail2ban
+    systemctl enable --now nginx
+    systemctl enable --now xray
+    systemctl enable --now rc-local
+    systemctl enable --now dropbear
+    systemctl enable --now openvpn
+    systemctl enable --now cron
+    systemctl enable --now haproxy
+    systemctl enable --now netfilter-persistent
+    systemctl enable --now ws
+    systemctl enable --now fail2ban
 history -c
 echo "unset HISTFILE" >> /etc/profile
 
@@ -1226,8 +1226,8 @@ cat >/etc/rc.local <<EOF
 #!/bin/sh -e
 # rc.local
 # By default this script does nothing.
-iptables -I INPUT -p udp ─dport 5300 -j ACCEPT
-iptables -t nat -I PREROUTING -p udp ─dport 53 -j REDIRECT ─to-ports 5300
+iptables -I INPUT -p udp --dport 5300 -j ACCEPT
+iptables -t nat -I PREROUTING -p udp --dport 53 -j REDIRECT --to-ports 5300
 systemctl restart netfilter-persistent
 exit 0
 EOF
@@ -1256,9 +1256,9 @@ clear
 print_install "Enable Service"
     systemctl daemon-reload
     systemctl start netfilter-persistent
-    systemctl enable ─now rc-local
-    systemctl enable ─now cron
-    systemctl enable ─now netfilter-persistent
+    systemctl enable --now rc-local
+    systemctl enable --now cron
+    systemctl enable --now netfilter-persistent
     systemctl restart nginx
     systemctl restart xray
     systemctl restart cron
@@ -1333,9 +1333,9 @@ echo " Succes At Registrasi" | tee -a log-install.txt
 echo "    VPS INFO" | tee -a log-install.txt
 pth="\033[1;37m"
 clear
-echo -e " ${tyblue}┌──────────────────────────────────────────────────┐${NC}"
-echo -e " ${tyblue}│$NC\033[41m                   ARI TUNNELING                  $NC│$NC"
-echo -e " ${tyblue}└──────────────────────────────────────────────────┘${NC}"
+echo -e "${tyblue} ┌──────────────────────────────────────────┐\033[0m"
+echo -e "${tyblue} │            \033[1;37mINFO ARISCTUNNEL         ${tyblue}│${NC}"
+echo -e "${tyblue} └──────────────────────────────────────────┘\033[0m"
 echo -e "${tyblue}┌─────────────────────────────────────────────┐"
 echo -e "${tyblue}│${pth}       >>> Service & Port                    ${tyblue}│${NC}"
 echo -e "${tyblue}│${pth}   - Open SSH                : 443, 80, 22   ${tyblue}│${NC}"
